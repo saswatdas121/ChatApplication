@@ -4,32 +4,26 @@
 
 //By mongoose-It has a internal function which is connect which could help us connect with mongodb.
 
-const mongoose=require('mongoose');
-
+const mongoose = require("mongoose");
+const express= require('express');
 
 require('dotenv').config({
     path: 'C:/Users/Shubham/Desktop/ChatApplication/config.env'
 })//For enviornment variables
 
-const connectDB=async ()=>
-{
-    try
-    {
-        
-         const conn=await mongoose.connect(process.env.MONGODB_URI,
-            {
-                useUnifiedTopology:true
-            });
-        console.log("MongoDB connected");
-    }
-    catch(error){
-        console.log(error);
-        process.exit();
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+    });
 
-    }
-}
-
-module.exports=
-{
-    connectDB:connectDB
+    console.log(`MongoDB Connected`);
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    process.exit();
+  }
 };
+
+module.exports= connectDB;

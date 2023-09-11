@@ -1,10 +1,12 @@
-import React from 'react'
+import {React,useEffect} from 'react'
 import { Container,Box,Text} from '@chakra-ui/react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import Login from '../Components/Authentication/Login.js'
 import Signup from '../Components/Authentication/Signup.js'
 
 function HomePage() {
+
+  
   //Box acts like a div and we dont need to write style= this type of thing.Just we can style directly..
   return (
     <Container maxW="xl" centerContent>

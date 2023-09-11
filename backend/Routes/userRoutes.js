@@ -3,6 +3,8 @@ const userControllers = require('../Controllers/userControllers');
 const multer=require('multer');
 const app=express();
 
+const protect=require('../middlewares/authmiddleware')
+
 const storageConfig=multer.diskStorage({
     destination:function(req,file,cb)
     {
@@ -25,6 +27,7 @@ router.post('/',upload.single('pics'),userControllers.registerUser);
 
 router.post('/login',userControllers.authUser);
 
-router.get('/',userControllers.allUsers)
+router.get('/',protect,userControllers.allUsers);
+
 
 module.exports=router

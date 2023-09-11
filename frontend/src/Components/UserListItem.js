@@ -6,6 +6,7 @@ import { Box, Text } from "@chakra-ui/layout";
 function UserListItem(props) {
   return (
     <Box
+      onClick={props.handleFunction}
       cursor="pointer"
       bg="#E8E8E8"
       _hover={{

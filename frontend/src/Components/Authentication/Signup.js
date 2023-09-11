@@ -122,6 +122,8 @@ import {
                 position:'bottom'
               })
 
+              console.log(data);
+
               navigate('/chats');
 
           }

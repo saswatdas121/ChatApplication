@@ -1,4 +1,4 @@
-import {React,useState} from 'react'
+import {React,useState,useContext} from 'react'
 import { Box,Tooltip,Button,Text,Input,useToast} from '@chakra-ui/react'
 import {
     Menu,
@@ -26,9 +26,12 @@ import {
   import ProfileModal from './ProfileModal';
   import {useDisclosure} from '@chakra-ui/hooks';
   import axios from 'axios';
+  import {ChatState} from '../../Context/ChatProvider' 
 
   import ChatLoading from '../ChatLoading';
   import UserListItem from '../UserListItem'
+  import {Spinner} from '@chakra-ui/spinner';
+  import {ChatContext}  from '../../Context/ChatProvider'
 
 function SideDrawer() {
 const [search,setSearch]=useState("");//For Searching the user for name and email
@@ -37,6 +40,12 @@ const [loading,setLoading]=useState(false);
 const [loadingChat,setLoadingChat]=useState();
 const { isOpen, onOpen, onClose } = useDisclosure();
 const toast = useToast();
+
+const ChatState = () => {
+  return useContext(ChatContext)
+  }
+
+  const {user,setSelectedChat,chats,setChats} =ChatState();
 
 async function handleSearch()
 {
@@ -55,8 +64,14 @@ async function handleSearch()
     setLoading(true);
     try
     {
-        const res=await axios.get(`/api/user?search=${search}`);
-        console.log(res.data);
+      const config=
+      {
+        headers:{
+          Authorization: `Bearer ${user.token}`,
+        }
+      }
+        const res=await axios.get(`/api/user?search=${search}`,config);
+        console.log(res);
         setLoading(false);
         setSearchResult(res.data);
     }
@@ -74,6 +89,40 @@ async function handleSearch()
       return;
     }
     
+}
+const accessChat=async(userId)=>
+{
+  try
+  {
+    console.log(user)
+    setLoadingChat(true);
+
+    const config=
+    {
+      headers:{
+        Authorization: `Bearer ${user.token}`,
+      }
+    }
+
+    const {data}=await axios.post('api/chat',{userId},config);//
+
+  //if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
+
+    setSelectedChat(data);
+    setLoadingChat(false);
+    onClose();
+  }
+  catch(error)
+  {
+    toast({
+      title: 'Error fetching the chat',
+      status: error.message,
+      duration: 5000,
+      isClosable: true,
+      position:'bottom-left'
+      
+    })
+  }
 }
   
 return (
@@ -136,10 +185,11 @@ return (
       loading?(<ChatLoading/>):(
         searchResult.map((user)=>
         {
-           return <UserListItem key={user._id} user={user}/>
+           return <UserListItem key={user._id} user={user} handleFunction={()=>accessChat(user._id)}/>
         })
       )
     }
+    {loadingChat && <Spinner ml="auto" display="flex"/>}
   </DrawerBody>
 </DrawerContent>
 </Drawer>

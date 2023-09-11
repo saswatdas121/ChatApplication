@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import {ChatState} from '../Context/ChatProvider'
 
+import ChatLoading from '../Components/ChatLoading'
+import { useOutletContext } from "react-router-dom";
 
 
 function Chats() {
-const [data,setData]=useState([]);
+  const user = useOutletContext();
 
-  async function fetchData()
-{
-    const {data}=await axios.get('/api/chats');
-    setData(data);
-    
-}
-useEffect(()=>
-{
-    fetchData();
-},[])
-
+  console.log(user)
 
   return (
+    <>
     <div>
-     {data.map((element)=>
-     {
-         return <div>{element.lname}</div>
-     })}
+     Home
     </div>
+    {!user && (<div><div>Login</div><div>Register</div></div>)}
+
+          </>
+    
   )
 }
 

@@ -8,7 +8,7 @@ const chatModel=new mongoose.Schema({
     },
     isGroupChat:
     {
-        type:boolean,
+        type:Boolean,
         default:false
     },
     users:[
@@ -20,7 +20,7 @@ const chatModel=new mongoose.Schema({
     latestMessage:
     {
         type:mongoose.Schema.Types.ObjectId,
-        ref:'message'
+        ref:'Message'
 
     },
     isGroupAdmin:
@@ -32,8 +32,6 @@ const chatModel=new mongoose.Schema({
 
     },
 
-    //
-
 },
 {
     timestamps:true
@@ -42,4 +40,4 @@ const chatModel=new mongoose.Schema({
 
 const Chat=mongoose.model("Chat",chatModel);//Created a model to update,delete and create documents based on schema chatModel and in collection Chat
 
-module.export=Chat;
+module.exports=Chat;

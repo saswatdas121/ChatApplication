@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useContext} from 'react'
 import { VStack,Input, InputRightElement,InputGroup,Button } from '@chakra-ui/react'
 import {
     FormControl,
@@ -7,6 +7,7 @@ import {
 
   import { useToast } from '@chakra-ui/react';
   import { useNavigate } from 'react-router-dom';
+  import {ChatContext}  from '../../Context/ChatProvider'
 
 
   import axios from 'axios';
@@ -16,15 +17,20 @@ function Login() {
 
     let [show,setShow]=useState(false);//Taking a state variable show which hides the password.setShow just alternates the value (true to false or false to true).
     //So whenever we click the button it calls handleClick thet in alternates the value then components get render again then we set the type of thhe input 
-    let [email,setEmail]=useState();
-    let [password,setPassword]=useState();    
+    let [email,setEmail]=useState("");
+    let [password,setPassword]=useState("");    
     let [loading,setLoading]=useState();
     const toast = useToast();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
+    const ChatState = () => {
+        return useContext(ChatContext)
+        }
+      
+
+    const {setUser} = ChatState();
 
 
-
-    
     function handleClick()
     {
         setShow(!show);
@@ -33,6 +39,7 @@ function Login() {
     const submitHandler=async ()=>
     {
         setLoading(true);
+        console.log("sss")
 
         if(!email  || !password)
         {
@@ -57,20 +64,22 @@ function Login() {
             }
 
             
-            const data=await axios.post('api/user/login',
+            const {data}=await axios.post('/api/user/login',
             {
                 email:email,
                 password:password
             },config);
-            
-    
+
+            localStorage.setItem("userInfo",JSON.stringify(data));//We user json stringify because localstorage 
+            //can store text and strings only.
+
+            setUser(data);
             navigate('/chats');
 
-
         }
-
-        catch(error)
+       catch(error)
         {
+            console.log("ssss");
             console.log(error)
         }
 
